@@ -1,4 +1,2 @@
-admin
-123456
-
 sudo docker-compose up -d
+sudo docker-compose down
