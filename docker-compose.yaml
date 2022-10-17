@@ -1,0 +1,62 @@
+version: '3'
+
+networks:
+  wpsite:
+
+services:
+  database:
+    container_name: database
+    image: mysql:8.0
+    restart: always
+    ports:
+    - '${IP}:3306:3306'
+    volumes:
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+      - db_data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: "${DB_NAME}"
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+    networks:
+      - wpsite
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    depends_on:
+      - database
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '${IP}:8081:80'
+    environment:
+      PMA_HOST: database
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+    networks:
+      - wpsite
+    links:
+      - database:database
+
+  wordpress:
+    container_name: wordpress
+    depends_on:
+      - database
+    image: wordpress:latest
+    restart: always
+    ports:
+      - '${IP}:8080:80'
+    volumes:
+      - ./wordpress:/var/www/html
+      - ./init.sh:/docker-entrypoint-initdb.d/init.sh
+      - ./upload.ini:/usr/local/etc/php/conf.d/uploads.ini
+    environment:
+      WORDPRESS_DB_HOST: database:3306
+      WORDPRESS_DB_NAME: "${DB_NAME}"
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: "${DB_ROOT_PASSWORD}"
+    networks:
+      - wpsite
+    links:
+      - database
+
+volumes:
+  db_data:
