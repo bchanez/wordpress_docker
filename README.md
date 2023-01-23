@@ -1,48 +1,57 @@
 # Docker wordpress
 
-Put the informations in the .env then launch the server.
+Put the informations in the .env if you want then launch the server.
 
-# Useful command
+Useful link :
 
-## Launch the server
+- phpmyadmin : http://localhost:8081/
+- wordpress : http://localhost:8082/
+
+## Prerequisites
+
+https://docs.docker.com/get-docker/
+
+## Useful command
+
+### Launch the server
 
 ```sh
 docker-compose up -d
 ```
 
-## Shut down the server
+### Shut down the server
 
 ```sh
 docker-compose down
 ```
 
-## Stop a container
+### Stop a container
 
 ```sh
 docker ps
 docker stop <id>
 ```
 
-## Connect to a container
+### Connect to a container
 
 ```sh
 docker ps
 docker exec -it <id> /bin/bash
 ```
 
-## Export of the database
+### Export of the database
 
 ```sh
 sh ./export-db.sh
 ```
 
-## Remove all unused containers, networks, images (both dangling and unreferenced), and optionally, volumes.
+### Remove all unused containers, networks, images (both dangling and unreferenced), and optionally, volumes.
 
 ```sh
 docker system prune -a
 ```
 
-## Find the port already in use to delete it
+### Find the port already in use to delete it
 
 ```sh
 netstat -nlp | grep <port>
